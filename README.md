@@ -5,7 +5,6 @@
 - Make installation process
 - Write installation in README
 - Make an argparse for deciding whether to save the .sh file or not, default to false
-- Check that multiple .inp files generation and submission works
 
 ## Installation
 

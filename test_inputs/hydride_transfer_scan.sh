@@ -8,8 +8,8 @@
 module load openmpi/3.1.4
 export ORIG=$PWD
 export SCR=$TMPDIR #Provided by the system but not /scratch or /tmp. Assigned on a per job basis
-cp GeometryOpt_parallel_HCoCO3CH2CH2.inp $SCR
+cp hydride_transfer_scan.inp $SCR
 cd $SCR
-/apps/applications/orca/5.0.4/1/default/bin/orca GeometryOpt_parallel_HCoCO3CH2CH2.inp > GeometryOpt_parallel_HCoCO3CH2CH2,out
+/apps/applications/orca/5.0.4/1/default/bin/orca hydride_transfer_scan.inp > hydride_transfer_scan,out
 rm -f *.tmp
 cp *.xyz *.hess *.out $ORIG
