@@ -7,7 +7,7 @@
 - Make an argparse for deciding whether to save the .sh file or not, default to false
 
 ## Installation
-source <(wget -O - https://github.com/OCruise2/autoSH/install.sh)
+source <(wget -O - https://raw.github.com/OCruise2/autoSH/install.sh)
 ## Running the Script
 Navigate to the directory that contains your .inp file, then call the script and relevant filename. Multiple .inp files can be specified at once
 Ex/
