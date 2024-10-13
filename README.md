@@ -5,6 +5,7 @@
 - Check if installation works on HPC
 - Write installation in README
 - Make an argparse for deciding whether to save the .sh file or not, default to false
+- Clean up repo
 
 ## Installation
 source <(wget -O - https://raw.githubusercontent.com/OCruise2/autoSH/main/install.sh)
