@@ -2,7 +2,7 @@
 #$ -V -cwd
 #$ -l h_rt=48:00:00
 #$ -pe smp 16
-#$ -l h_vmem=3G
+#$ -l h_vmem=6G
 #$ -m be
 
 module load openmpi/3.1.4
