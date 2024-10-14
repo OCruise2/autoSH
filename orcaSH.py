@@ -1,35 +1,30 @@
-#!/usr/bin/ python
+#!/usr/bin/python
 import os
 import argparse
 
 def get_args():
     '''Get the command line arguments passed to this script using argparse. 
     Nothing aside from the .inp filenames is critical'''
-
     parser = argparse.ArgumentParser()
     parser.add_argument("filenames", action='store',
                         help='.inp file(s) submit to the queue',
                         nargs='+')
-    
     parser.add_argument("-ca", "--copy_all",
                         action='store_true',
                         default=False,
                         help='Copy all of the files in the current directory'
-                        'to the compute node. Default is false.')
-
+                             'to the compute node. Default is false.')
     parser.add_argument('-cs', "--copy_scratch",
                         action='store_true',
                         default=False,
                         help='Copy all files from the scratch directory back'
-                        'to this directory when the calculation is '
-                        'finished. Default is false.')
-    
+                             'to this directory when the calculation is '
+                             'finished. Default is false.')
     parser.add_argument('-np', '--num_processors',
                         type=int,
                         default=0,
                         help="Override the number of cores specified in the "
-                        "input file. Defaults to zero, ")
-    
+                             "input file. Defaults to zero, ")
     parser.add_argument('-mem', '--set_memory',
                         type=int,
                         default=3,
@@ -38,15 +33,12 @@ def get_args():
 
 def num_cores(inp_filename, args):
     '''Gets the number of cores to request from the .inp file
-
     Returns:
         (int): Number of cores
-
     Raises:
         ValueError: If the input file contains an error or is not correctly formatted.
     '''
     _num_cores = 1  # Defaults to 1 if none specified
-
     try:
         with open(inp_filename, 'r') as inp_file:
             for line in inp_file:
@@ -56,7 +48,7 @@ def num_cores(inp_filename, args):
                         if item.lower().startswith('pal'):
                             _num_cores = int(item[3:])
                             break
-                
+
                 # Check for '%pal' method for nprocs
                 if 'nprocs' in line.lower():
                     parts = line.split()
@@ -65,17 +57,15 @@ def num_cores(inp_filename, args):
                         if idx + 1 < len(parts):
                             _num_cores = int(parts[idx + 1])
                         else:
-                            raise ValueError(f"Invalid format for 'nprocs' in {inp_filename}")
-
+                            raise ValueError("Invalid format for 'nprocs' in {}".format(inp_filename))
     except FileNotFoundError:
-        raise ValueError(f"Input file {inp_filename} not found.")
+        raise ValueError("Input file {} not found.".format(inp_filename))
     except ValueError as ve:
-        raise ValueError(f"Error parsing {inp_filename}: {ve}")
-    
+        raise ValueError("Error parsing {}: {}".format(inp_filename, ve))
+
     # Override with command-line argument if provided
     if args.num_processors != 0:
         _num_cores = args.num_processors
-
     return _num_cores
 
 def make_sh_file(sh_filename, inp_filename, args):
@@ -86,63 +76,47 @@ def make_sh_file(sh_filename, inp_filename, args):
     Arguments:
         sh_filename (str): Submission script filename
         inp_filename (str): Input filename
-        args (Namespace): Command line arguents
+        args (Namespace): Command line arguments
     """
     orca_path = '/apps/applications/orca/5.0.4/1/default/bin/orca'
-
     with open(sh_filename, 'w') as sh_file:
-        # #$/bin/bash specifies to run the .sh in bash instead of sh or zsh etc
-        # Submits for max 48 h runtime
-        sh_file.write(f"""#$/bin/bash
+        sh_file.write("""#!/bin/bash
 #$ -V -cwd
 #$ -l h_rt=48:00:00
-#$ -pe smp {num_cores(inp_filename, args)}
-#$ -l h_vmem={args.set_memory}G
+#$ -pe smp {}
+#$ -l h_vmem={}G
 #$ -m be
-
 module load openmpi/3.1.4
+
 export ORIG=$PWD
-export SCR=$TMPDIR #Provided by the system but not /scratch or /tmp. Assigned on a per job basis
-""")
+export SCR=$TMPDIR # Provided by the system but not /scratch or /tmp. Assigned on a per job basis
 
-        #Copy files to the scratch
-        copy_files = '*' if args.copy_all else inp_filename
-        sh_file.write(f'cp {copy_files} $SCR\n')
-        sh_file.write("cd $SCR\n")
+cp {} $SCR
+cd $SCR
 
-        #ORCA command itself
-        output_filename = inp_filename.replace(".inp", ",out")
-        sh_file.write(f"{orca_path} {inp_filename} > {output_filename}\n")
+# ORCA command
+{} {} > {}
 
-        #Cleaning up temp files - ORCA does this automatically, but if the calculation fails, 
-        # they will not be removed by default
-        sh_file.write("rm -f *.tmp\n")
+# Clean up temp files - ORCA does this automatically, but if the calculation fails, they will not be removed by default
+rm -f *.tmp
 
-        #Copying results back to working directory. 
-        if args.copy_scratch:
-            sh_file.write("cp -R * $ORIG\n")
-        else:
-            sh_file.write("cp *.xyz *.hess *.out $ORIG\n")
+# Copy results back to working directory
+{}
 
-        #Removes shell output (comment out line for testing)
-        #sh_file.write("rm *.sh.*\n")
+# Remove shell output (comment out line for testing)
+# rm *.sh.*
+""".format(num_cores(inp_filename, args), args.set_memory, '*' if args.copy_all else inp_filename,
+               orca_path, inp_filename, inp_filename.replace(".inp", ".out"),
+               'cp -R * $ORIG' if args.copy_scratch else 'cp *.xyz *.hess *.out $ORIG'))
     return None
 
 if __name__ == '__main__':
-    arguments=get_args()
-
+    arguments = get_args()
     for filename in arguments.filenames:
         if not filename.endswith('.inp'):
-            exit(f"Filename must end with .inp. Found: {filename}")
-
+            exit("Filename must end with .inp. Found: {}".format(filename))
         script_filename = filename.replace('.inp', '.sh')
-
-        #Cannot start script names with a digit - will add '_' in front
-        if script_filename[0].isdigit():
-            script_filename = f'_{script_filename}'
-
-        make_sh_file(script_filename,
-                     inp_filename=filename,
-                     args=arguments)
-        
-        os.system(f'qsub {script_filename}')
+        if script_filename[0].isdigit():  # Cannot start script names with a digit - will add '_' in front
+            script_filename = '_{}'.format(script_filename)
+        make_sh_file(script_filename, inp_filename=filename, args=arguments)
+        os.system('qsub {}'.format(script_filename))
