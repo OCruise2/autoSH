@@ -40,7 +40,9 @@ The filepath to orca.exe has to be hardcoded, script will break if it is moved i
 By loading the modules and determining where they are located. The script can easily be altered to include the correct filepaths.
 For example:
 > module add orca
+
 > which orca
+
 > /apps/applications/orca/5.0.4/1/default/bin/orca
 
 The resulting output can be pasted into the orca_path variable (line 81 as of Oct. 14, 2024). The same thing can be done for python, execpt it occurs on line 1 of the script.
