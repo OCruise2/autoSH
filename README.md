@@ -23,7 +23,7 @@ or
 - <input_file.inp>: Path to input file(s) for ORCA. Multiple files can be specified
 - -ca or --copy_all: (Optional) If set, copies all files in the current directory to the compute node. Default is false.
 - -cs or --copy_scratch: (Optional) If set, copies all files from the scratch/temp directory back to the original directory when the calculation is finished. Default is false.
-- -np or --num_processors <num>: (Optional) Overrides the number of cores specified in the input file. Defaults to 0.
+- -np or --num_processors <int>: (Optional) Overrides the number of cores specified in the input file. Defaults to 0.
 - -mem or --set_memory <memory_in_GB>: (Optional) Sets the memory per core for the calculation. Default is 3 GB per core.
 
 ## Example
