@@ -2,10 +2,7 @@
 
 ## ToDO:
 - Alter directory making and final copying to a folder on the /nobackup storage. Much quicker and saves on data. Users can copy over what they feel is relevant to more permanent storage solutions
-- Check if installation works on HPC
-- Write installation in README
 - Make an argparse for deciding whether to save the .sh file or not, default to false
-- Clean up repo
 
 ## Installation
 source <(wget -O - https://raw.githubusercontent.com/OCruise2/autoSH/main/install.sh)
@@ -32,6 +29,16 @@ or
 
 
 Will submit a job for calculation.inp and copies all files in the current directory to the compute node. Copies all files from the scratch back into the original directory once finished. Calculation is run with 4 cores with 8 GB of memory each for a total of 64 GB.
- 
 
+## Potential Issues
+ARC 3 and 4 currently use Python 2.7.5, if this is updated and the default file pathing changes, the script will need to be updated to include python3. 
+The filepath to orca.exe has to be hardcoded, script will break if it is moved in the background.
 
+## Potential Fixes
+By loading the modules and determining where they are located. The script can easily be altered to include the correct filepaths.
+For example:
+> module add orca
+> which orca
+> /apps/applications/orca/5.0.4/1/default/bin/orca
+
+The resulting output can be pasted into the orca_path variable (line 81 as of Oct. 14, 2024). The same thing can be done for python, execpt it occurs on line 1 of the script.
