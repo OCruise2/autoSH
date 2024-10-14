@@ -1,11 +1,13 @@
-# README for ORCA Job Submission Script on the Leeds HPC clusters ARC 3 and 4
+# ORCA Job Submission Script on the Leeds HPC clusters ARC 3 and 4
 
 ## ToDO:
 - Alter directory making and final copying to a folder on the /nobackup storage. Much quicker and saves on data. Users can copy over what they feel is relevant to more permanent storage solutions
 - Make an argparse for deciding whether to save the .sh file or not, default to false
 
 ## Installation
-source <(wget -O - https://raw.githubusercontent.com/OCruise2/autoSH/main/install.sh)
+Execute the following command in the terminal once logged onto the HPC cluster.
+> source <(wget -O - https://raw.githubusercontent.com/OCruise2/autoSH/main/install.sh)
+
 ## Running the Script
 Navigate to the directory that contains your .inp file, then call the script and relevant filename. Multiple .inp files can be specified at once
 Ex/
