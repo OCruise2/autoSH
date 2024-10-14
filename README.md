@@ -2,7 +2,7 @@
 
 ## ToDO:
 - Alter directory making and final copying to a folder on the /nobackup storage. Much quicker and saves on data. Users can copy over what they feel is relevant to more permanent storage solutions
-- Make an argparse for deciding whether to save the .sh file or not, default to false
+- Make an argparse for deciding whether to save the .sh file or not, default to false. Currently will save .sh file to the current working directory.
 
 ## Installation
 Execute the following command in the terminal once logged onto the HPC cluster.
