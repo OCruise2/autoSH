@@ -1,5 +1,9 @@
 # ORCA Job Submission Script on the Leeds HPC clusters ARC 3 and 4
 
+## Update: Aire is moving to Slurm which requires a rewrite of this - project closed until on the new system
+- Incl. good checkpointing on new version
+- Make a sub script which ties into geodesic interp. and re-runs optimisation
+
 ## ToDO:
 - Alter directory making and final copying to a folder on the /nobackup storage. Much quicker and saves on data. Users can copy over what they feel is relevant to more permanent storage solutions
 - Make an argparse for deciding whether to save the .sh file or not, default to false. Currently will save .sh file to the current working directory.
