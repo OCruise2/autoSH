@@ -1,5 +1,8 @@
 # ORCA Job Submission Script on the Leeds HPC clusters ARC 3 and 4
 
+##Important TODO:
+- Implement %maxcore reading!!!
+
 ## Update: Aire is moving to Slurm which requires a rewrite of this - project closed until on the new system
 - Incl. good checkpointing on new version
 - Make a sub script which ties into geodesic interp. and re-runs optimisation
